@@ -1,26 +1,33 @@
 <template>
 
   <main>
-    <h1>Welcome to csv2json!!</h1>
+    <h1>Welcome to csv2json!</h1>
+    <p>Convert your csv to json or json to csv, just paste the content or attach the corresponding file.</p>
 
-    <div class="switches">
-      <button @click="switchConv">{{ this.toJson ? "convert CSV to JSON" : "convert JSON to CSV" }}</button>
+    <div>
+      <button class="toogleButton" @click="switchConv">{{ this.toJson ? "CSV to JSON" : "JSON to CSV" }}</button>
     </div>
-    
-
+    <div class="content">
+      <div class="forms">
     <form @submit.prevent="validateCsv" v-show="toCsv">
       <textarea name="inCsv" v-model="inputData" required placeholder="Type the CSV here..."/>
-      <button type="submit">convert!</button>
+      <div class="buttons">
+        <button type="submit" class="convertButton">convert!</button>
+      </div>
     </form>
     <form @submit.prevent="validateJson" v-show="toJson">
       <textarea name="inJson" v-model="inputData" required placeholder="Type the JSON here..."/>
-      <button type="submit">convert!</button>
+      <div class="buttons">
+        <button type="submit" class="convertButton">convert!</button>
+      </div>
     </form>
-    <div v-show="done" class="result">
-    <h3>The json is:</h3>
-    <br>
+      </div>
+    <div class="result">
     <span>{{ result }}</span>
     </div>
+
+    </div>
+    
 
 
   </main>
@@ -44,7 +51,7 @@ export default {
       totalDataRows:0,
       attrs:null,
 
-      result:[],
+      result:null,
       done: false
     }
   },
@@ -60,14 +67,17 @@ export default {
       
       let attrsValues = this.attrs[0].split(',')
       
-      console.log(attrsValues, this.csvArr)
-      this.csvArr.forEach((row, index)=>{
+      console.log(trimCsvArr, attrsValues, this.csvArr)
+
+      this.csvArr.forEach((row)=>{
         let rowData = row.split(',')
         
         this.totalDataRows += rowData.length 
-        console.log(index)
+        
       })
-
+        console.log(this.totalDataRows, attrsValues.length, this.csvArr)
+        console.log(this.totalDataRows%attrsValues.length)
+        
       if(this.totalDataRows % attrsValues.length == 0){
         this.convertCsv(attrsValues)
       }else{
@@ -129,27 +139,49 @@ html,body{
   width:100%;
   height: 100%;
 
-  font-family: Helvetica, sans-serif;
+  font-family: 'Poppins', sans-serif;
 
-  background-image: linear-gradient(to right top, #6bd1a9, #74d6af, #7ddbb5, #86e0bc, #8fe5c2, #9ae8ca, #a5ecd1, #b0efd8, #c1f2e1, #d1f4e9, #e3f6f1, #f4f8f7);
+  background: #FEFAE0;
 
 }
-main, form{
+
+main{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
+  
+}
+h1{
   margin-top: 48px;
 }
+.content{
+  display: flex;
+  margin-top: 48px;
+
+}
+.forms{
+  display: flex;
+  align-items: center;
+}
+.forms form{
+  display: flex;
+}
+.buttons{
+  display: flex;
+  flex-direction: column;
+
+  padding-top: 240px;
+}
+
 button{
-  width: 280px;
+  width: 120px;
   height: 48px;
 
   margin-top: 24px;
   border:0;
-  border-radius: 4px;
-  background: #fff;
+  border-radius: 8px;
 
   font-size: 16px;
   
@@ -158,33 +190,59 @@ button{
   cursor:pointer;
 
 }
+.toogleButton{
+  background-color: #CCD5AE;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+.convertButton{
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  background-color: #D4A373;
+
+  margin: 0 24px;
+
+}
 button:hover{
   background: transparent;
   border: 1px solid #000;
 
 }
-textarea{
-  width: 1024px;
-  height: 240px;
 
+textarea, .result{
+
+  font-size: 12apx;
   padding: 8px;
-}
-.result{
-  width: 860px;
-  
 
-  background: #FFF;
-  color:#221D23;
-  font-size: 18px;
-
-  margin-top: 36px;
-
-  padding: 16px;
-
-  border:0;
+  background: #FAEDCD;
+  border: 2px solid #CCD5AE;
   border-radius: 8px;
+
+  width: 640px;
+  height: 520px;
 }
+
+textarea::placeholder{
+  color:#717171;
+}
+
 .result h3{
   color: #4F3824;
+}
+
+@media screen and (max-width:1366px){
+  textarea, .result{
+  padding: 8px;
+
+  background: #FAEDCD;
+  border: 2px solid #CCD5AE;
+  border-radius: 8px;
+
+  width: 320px;
+  height: 260px;
+}
+.buttons{
+  padding-top: 104px;
+}
 }
 </style>
